@@ -21,7 +21,6 @@ char	*read_line(char *str, int fd)
 	nb_bytes_read = 1;
 	if (!str)
 		return (0);
-	// peut etre utiliser calloc pour avoir une ligne en moins
 	reader = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!reader)
 		return (0);
@@ -52,7 +51,6 @@ char	*store_line(char *str)
 		return (0);
 	while (str && str[index] != '\n')
 		index++;
-	// on met 2 pour avoir le \0 et le \n
 	s = malloc(sizeof(char) * (index + 2));
 	if (!s)
 		return (0);
@@ -62,7 +60,6 @@ char	*store_line(char *str)
 		s[index] = str[index];
 		index++;
 	}
-	//tu me copie la nouvelle ligne en plus et ensuite tu termines la str
 	if (str[index] == '\n')
 	{
 		s[index] = str[index];
@@ -88,17 +85,17 @@ char	*free_selection(char *str)
 		return (0);
 	}
 	backup = malloc (sizeof(char) *(ft_strlen(str) - index + 1));
-    if (!backup)
-        return(0);
-    index++; 
-    index_2 = 0;
-    while (str[index])
-    {
+	if (!backup)
+		return (0);
+	index++;
+	index_2 = 0;
+	while (str[index])
+	{
 		backup[index_2++] = str[index++];
-    }
-    backup[index_2] = '\0';
-    free (str);
-    return (backup);
+	}
+	backup[index_2] = '\0';
+	free (str);
+	return (backup);
 }
 
 /*read a file line after line*/
