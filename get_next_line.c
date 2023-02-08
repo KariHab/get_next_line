@@ -12,64 +12,73 @@
 
 #include "get_next_line.h"
 
-/*to read a line*/
-char	*read_line(char *str, int fd)
+/*to read a file*/
+char	*read_file(char *str, int fd)
 {
 	char	*reader;
-	int		nb_bytes_read;
+	int		nb_bytes;
+	char	*tmp;
 
-	nb_bytes_read = 1;
 	if (!str)
-		return (0);
-	reader = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		str = ft_calloc(1, 1);
+	reader = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!reader)
 		return (0);
-	while (nb_bytes_read != 0 && !ft_strchr(str, '\n'))
+	nb_bytes = 1;
+	while (nb_bytes > 0)
 	{
-		nb_bytes_read = read(fd, reader, BUFFER_SIZE);
-		if (nb_bytes_read == -1)
+		/*while it' s not eof - va lire la totalite de buffer_size du fichier si 42 va lire 42 char*/
+		nb_bytes = read(fd, reader, BUFFER_SIZE);
+		/*si erreur de la fonction read()*/
+		if (nb_bytes == -1)
 		{
 			free(reader);
 			return (0);
 		}
-		reader[nb_bytes_read] = '\0';
-		str = ft_strjoin(str, reader);
+		/*pour dire qu' on a la place pour tout ce qui doit etre lu + le \0 donc on le fini*/
+		// reader[nb_bytes] = 0;
+		/*on va join le str + la space de notre file lu. On va liberer la memoire du str et on va retourner notre bloc*/
+		tmp = ft_strjoin(str, reader);
+		free(str);
+		return (tmp);
+		/*quit if find \n*/
+		if (ft_strchr(str, '\n'))
+			break;
 	}
 	free (reader);
 	return (str);
 }
 
-/*on veut copier la ligne dans la memoire*/
-
+/*OK - on veut copier la ligne dans la memoire - take line for return*/
 char	*store_line(char *str)
 {
 	int		index;
 	char	*s;
 
 	index = 0;
+	/*if no line return 0*/
 	if (!str)
 		return (0);
-	while (str && str[index] != '\n')
+		/*go to eol*/
+	while (str[index] && str[index] != '\n')
 		index++;
-	s = malloc(sizeof(char) * (index + 2));
+		/*malloc to eol*/
+	s = ft_calloc((index + 2), sizeof(char));
 	if (!s)
 		return (0);
 	index = 0;
-	while (str)
+	while (str[index] && str[index] != '\n')
 	{
 		s[index] = str[index];
 		index++;
 	}
-	if (str[index] == '\n')
-	{
-		s[index] = str[index];
-		index++;
-	}
-	s[index] = '\0';
+	/*if eol is \0 or \n replace eol by \n*/
+	if (str[index] && str[index] == '\n')
+		s[index++] = '\n';
 	return (s);
 }
 
-/*on veut free la memoire tout en gardant en memoire les dernieres lignes*/
+/*OK - on veut free la memoire tout en gardant en memoire les dernieres lignes- delete line find*/
 char	*free_selection(char *str)
 {
 	int		index;
@@ -77,14 +86,17 @@ char	*free_selection(char *str)
 	char	*backup;
 
 	index = 0;
+	/*trouver size of first line*/
 	while (str && str[index] != '\n')
 		index++;
+	/*si eol return 0*/
 	if (!str[index])
 	{
 		free(str);
 		return (0);
 	}
-	backup = malloc (sizeof(char) *(ft_strlen(str) - index + 1));
+	/*len of file - len of first line + 1 for \0*/
+	backup = ft_calloc((ft_strlen(str) - index + 1), sizeof(char));
 	if (!backup)
 		return (0);
 	index++;
@@ -105,9 +117,9 @@ char	*get_next_line(int fd)
 	char		*line_read;
 	static char	*str;
 
-	if (BUFFER_SIZE <= 0 || fd < 0 || read (fd, &line_read, 0) < 0)
+	if (BUFFER_SIZE <= 0 || fd < 0 || read (fd, 0, 0) < 0)
 		return (0);
-	str = read_line(str, fd);
+	str = read_file(str, fd);
 	if (!str)
 		return (0);
 	line_read = store_line(str);

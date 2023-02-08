@@ -24,5 +24,7 @@ char	*ft_strjoin(char *s1, char *s2);
 char	*free_selection(char *str);
 char	*store_line(char *str);
 char	*read_line(char *str, int fd);
+void *ft_calloc(size_t count, size_t size);
+void ft_bzero(void *s, size_t n);
 
 #endif
