@@ -12,36 +12,37 @@
 
 #include "get_next_line.h"
 
-/*my own*/
 size_t	ft_strlen(char *str)
 {
 	size_t	index;
 
 	index = 0;
 	while (str && str[index])
-	{
 		index++;
-	}
 	return (index);
 }
 
-/*my own*/
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*newstr;
 	size_t	i;
 	size_t	j;
 
+	if (!s1)
+	{
+		s1 = (char *)malloc(1 * sizeof(char));
+		s1[0] = '\0';
+	}
 	if (!s1 || !s2)
 		return (0);
 	newstr = malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2)) + 1));
 	if (!newstr)
-		return (0);
+			return (0);
 	else
 	{
 		i = 0;
 		j = 0;
-		while (s1[j])
+		while (s1[i])
 		{
 			newstr[i++] = s1[j++];
 		}
@@ -52,10 +53,10 @@ char	*ft_strjoin(char *s1, char *s2)
 		}
 		newstr[i] = '\0';
 	}
+	free(s1);
 	return (newstr);
 }
 
-/*my own modified  - find the first occurence of a char in a str*/
 char	*ft_strchr(char *s, int c)
 {
 	int	i;
@@ -72,7 +73,6 @@ char	*ft_strchr(char *s, int c)
 	return (0);
 }
 
-/*allocate memory and initialize it to 0*/
 void	*ft_calloc(size_t count, size_t size)
 {
 	void	*ptr;
@@ -84,7 +84,6 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-/*replace char to 0*/
 void	ft_bzero(void *s, size_t n)
 {
 	size_t	i;
