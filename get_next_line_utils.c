@@ -12,32 +12,17 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *str)
+char *ft_strjoin(const char *s1, const char *s2)
 {
-	size_t	index;
+	char *newstr;
+	size_t i;
+	size_t j;
 
-	index = 0;
-	while (str && str[index])
-		index++;
-	return (index);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*newstr;
-	size_t	i;
-	size_t	j;
-
-	if (!s1)
-	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		s1[0] = '\0';
-	}
 	if (!s1 || !s2)
 		return (0);
 	newstr = malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2)) + 1));
 	if (!newstr)
-			return (0);
+		return (0);
 	else
 	{
 		i = 0;
@@ -53,29 +38,24 @@ char	*ft_strjoin(char *s1, char *s2)
 		}
 		newstr[i] = '\0';
 	}
-	free(s1);
 	return (newstr);
 }
 
-char	*ft_strchr(char *s, int c)
+size_t ft_strlen(const char *str)
 {
-	int	i;
+	size_t index;
 
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i] != '\0')
+	index = 0;
+	while (str && str[index])
 	{
-		if (s[i] == (char)c)
-			return (((char *)s) + i);
-		i++;
+		index++;
 	}
-	return (0);
+	return (index);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+void *ft_calloc(size_t count, size_t size)
 {
-	void	*ptr;
+	void *ptr;
 
 	ptr = malloc(count * size);
 	if (!ptr)
@@ -84,12 +64,12 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-void	ft_bzero(void *s, size_t n)
+void ft_bzero(void *s, size_t n)
 {
-	size_t	i;
+	size_t i;
 
 	if (!s)
-		return ;
+		return;
 	i = 0;
 	while (i < n)
 	{

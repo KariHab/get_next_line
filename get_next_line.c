@@ -12,108 +12,120 @@
 
 #include "get_next_line.h"
 
-/*to save memory according to buffer*/
-char	*ft_read_save(char *str, int fd)
+char *ft_before(char *str)
 {
-	char	*buffer;
-	int		nb_bytes;
-
-	/*on veut pouvoir garder de la memoire pour tout le buffer_size*/
-	buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	if (!buffer)
-		return (NULL);
-	nb_bytes = 1;
-	/**/
-	while (!ft_strchr(str, '\n') && nb_bytes !=0)
-	{
-		nb_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (nb_bytes <= 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		/*on va ajouter le buffer saved*/
-		str = ft_strjoin(str, buffer);
-	} 
-	free (buffer);
-	return (str);
-}
-
-/*get the line and save it*/
-char	*ft_get_store_line(char *str)
-{
-	int		index;
-	char	*s;
+	int index;
+	char *ptr;
 
 	index = 0;
 	if (!str)
 		return (NULL);
-	while (str[index] && str[index] != '\n')
+	while (str[index] != '\n' && str[index])
 		index++;
-	s = ft_calloc((index + 2), sizeof(char));
-	if (!s)
+	if (str[0] == '\0')
+	{
+		return (NULL);
+	}
+	ptr = ft_calloc((index + 2), sizeof(char));
+	if (!ptr)
 		return (NULL);
 	index = 0;
-	while (str[index] && str[index] != '\n')
+	while (str[index] != '\n' && str[index])
 	{
-		s[index] = str[index];
+		ptr[index] = str[index];
 		index++;
 	}
 	if (str[index] == '\n')
-	{
-		s[index] = str[index];
-		index++;
-	}
-	s[index] = '\0';
-	return (s);
+		ptr[index++] = '\n';
+	return (ptr);
 }
-
-/*update the file without the line read*/
-char	*ft_update_file(char *str)
+char *ft_after(char *str)
 {
-	int		index;
-	int		index_2;
-	char	*backup;
+	int i;
+	int j;
+	char *ptr;
 
-	index = 0;
-	while (str && str[index] != '\n')
-		index++;
-	if (!str[index])
+	j = 0;
+	i = ft_strlen(str);
+	if (!str)
+		return (NULL);
+	while (str[j] != '\n' && str[j])
+		j++;
+	if (str[j] == '\0')
 	{
 		free(str);
 		return (NULL);
 	}
-	backup = ft_calloc((ft_strlen(str) - index + 1), sizeof(char));
-	if (!backup)
+	ptr = ft_calloc((i - j), sizeof(char));
+	if (!ptr)
 		return (NULL);
-	index++;
-	index_2 = 0;
-	while (str[index])
-	{
-		backup[index_2++] = str[index++];
-	}
-	backup[index_2] = '\0';
-	free (str);
-	return (backup);
+	i = 0;
+	j++;
+	while (str[j])
+		ptr[i++] = str[j++];
+	free(str);
+	return (ptr);
 }
 
-/*read a file line after line*/
-
-char	*get_next_line(int fd)
+int ft_newline(char *str)
 {
-	char		*line_read;
-	static char	*str;
+	if (!str)
+		return (0);
+	while (*str)
+	{
+		if (*str == '\n')
+			return (1);
+		str++;
+	}
+	return (0);
+}
 
-	if (BUFFER_SIZE < 1 || fd < 0 || read (fd, 0, 0) < 0)
+char *ft_read(int fd, char *buf, char *tmp, char *str)
+{
+	int nb_bytes;
+
+	nb_bytes = 1;
+	while (nb_bytes != 0)
+	{
+		nb_bytes = read(fd, buf, BUFFER_SIZE);
+		if (nb_bytes == -1)
+		{
+			free(buf);
+			return (NULL);
+		}
+		buf[nb_bytes] = '\0';
+		tmp = str;
+		if (!tmp)
+			tmp = ft_calloc(1, sizeof(char));
+		str = ft_strjoin(tmp, buf);
+		free(tmp);
+		if (ft_newline(str) == 1)
+			break;
+	}
+	free(buf);
+	return (str);
+}
+
+char *get_next_line(int fd)
+{
+	static char *str;
+	char *buf;
+	char *line;
+	char *tmp;
+
+	tmp = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str = ft_read_save(str, fd);
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	str = ft_read(fd, buf, tmp, str);
 	if (!str)
 		return (NULL);
-	line_read = ft_get_store_line(str);
-	str = ft_update_file(str);
-	return (line_read);
+	line = ft_before(str);
+	str = ft_after(str);
+	return (line);
 }
-
 
 // #include <stdio.h>
 // #include <unistd.h>
@@ -125,6 +137,6 @@ char	*get_next_line(int fd)
 // 	printf("%s", get_next_line(fd));
 // 	printf("%s", get_next_line(fd));
 // 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));	
+// 	printf("%s", get_next_line(fd));
 // 	return (0);
 // }
