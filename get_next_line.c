@@ -12,60 +12,59 @@
 
 #include "get_next_line.h"
 
-char	*ft_before(char *str)
+char	*ft_get_the_line(char *str)
 {
 	int		index;
-	char	*ptr;
+	char	*line;
 
 	index = 0;
-	if (!str)
-		return (NULL);
 	while (str[index] != '\n' && str[index])
 		index++;
 	if (str[0] == '\0')
-	{
 		return (NULL);
-	}
-	ptr = ft_calloc((index + 2), sizeof(char));
-	if (!ptr)
+	line = ft_calloc((index + 2), sizeof(char));
+	if (!line)
 		return (NULL);
 	index = 0;
 	while (str[index] != '\n' && str[index])
 	{
-		ptr[index] = str[index];
+		line[index] = str[index];
 		index++;
 	}
 	if (str[index] == '\n')
-		ptr[index++] = '\n';
-	return (ptr);
+	{
+		line[index] = '\n';
+		index++;
+	}
+	return (line);
 }
 
-char	*ft_after(char *str)
+char	*ft_get_the_next(char *str)
 {
-	int		i;
-	int		j;
-	char	*ptr;
+	int		index;
+	int		index_2;
+	char	*next;
 
-	j = 0;
-	if (!str)
-		return (NULL);
-	i = ft_strlen(str);
-	while (str[j] != '\n' && str[j])
-		j++;
-	if (str[j] == '\0')
+	index = 0;
+	while (str[index] != '\n' && str[index])
+		index++;
+	if (str[index] == '\0')
 	{
 		free(str);
 		return (NULL);
 	}
-	ptr = ft_calloc((i - j), sizeof(char));
-	if (!ptr)
+	next = ft_calloc((ft_strlen(str) - index + 1), sizeof(char));
+	if (!next)
+	{
+		free(next);
 		return (NULL);
-	i = 0;
-	j++;
-	while (str[j])
-		ptr[i++] = str[j++];
+	}
+	index_2 = 0;
+	index++;
+	while (str[index])
+		next[index_2++] = str[index++];
 	free(str);
-	return (ptr);
+	return (next);
 }
 
 int	ft_newline(char *str)
@@ -89,9 +88,12 @@ char	*ft_read(int fd, char *buf, char *tmp, char *str)
 	while (nb_bytes != 0)
 	{
 		nb_bytes = read(fd, buf, BUFFER_SIZE);
+		if (nb_bytes == 0)
+			break ;
 		if (nb_bytes == -1)
 		{
 			free(buf);
+			free(str);
 			return (NULL);
 		}
 		buf[nb_bytes] = '\0';
@@ -117,14 +119,14 @@ char	*get_next_line(int fd)
 	tmp = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!buf)
 		return (NULL);
 	str = ft_read(fd, buf, tmp, str);
 	if (!str)
 		return (NULL);
-	line = ft_before(str);
-	str = ft_after(str);
+	line = ft_get_the_line(str);
+	str = ft_get_the_next(str);
 	return (line);
 }
 
@@ -135,6 +137,7 @@ char	*get_next_line(int fd)
 // {
 // 	int fd;
 // 	fd = open("test.txt", O_RDONLY);
+// 	printf("%s", get_next_line(fd));
 // 	printf("%s", get_next_line(fd));
 // 	printf("%s", get_next_line(fd));
 // 	printf("%s", get_next_line(fd));
