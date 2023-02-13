@@ -12,64 +12,64 @@
 
 #include "get_next_line.h"
 
-char *ft_strjoin(const char *s1, const char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char *newstr;
-	size_t i;
-	size_t j;
+	char	*newstr;
+	size_t	i;
+	size_t	j;
 
-	if (!s1 || !s2)
-		return (0);
-	newstr = malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2)) + 1));
+	// if (!s1 || !s2)
+	// 	return (0);
+	newstr = ft_calloc(((ft_strlen(s1) + ft_strlen(s2)) + 1), sizeof(char));
 	if (!newstr)
-		return (0);
+	{
+		free(newstr);
+		return (NULL);
+	}
 	else
 	{
 		i = 0;
 		j = 0;
 		while (s1[i])
-		{
 			newstr[i++] = s1[j++];
-		}
 		j = 0;
 		while (s2[j])
-		{
 			newstr[i++] = s2[j++];
-		}
-		newstr[i] = '\0';
+		// newstr[i] = '\0';
 	}
 	return (newstr);
 }
 
-size_t ft_strlen(const char *str)
+size_t	ft_strlen(char *str)
 {
-	size_t index;
+	size_t	index;
 
 	index = 0;
 	while (str && str[index])
-	{
 		index++;
-	}
 	return (index);
 }
 
-void *ft_calloc(size_t count, size_t size)
+void	*ft_calloc(size_t count, size_t size)
 {
-	void *ptr;
+	void	*ptr;
 
 	ptr = malloc(count * size);
 	if (!ptr)
+	{
+		free(ptr);
 		return (ptr);
+	}
 	ft_bzero(ptr, count * size);
 	return (ptr);
 }
 
-void ft_bzero(void *s, size_t n)
+void	ft_bzero(void *s, size_t n)
 {
-	size_t i;
+	size_t	i;
 
 	if (!s)
-		return;
+		return ;
 	i = 0;
 	while (i < n)
 	{

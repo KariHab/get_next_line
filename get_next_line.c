@@ -12,10 +12,10 @@
 
 #include "get_next_line.h"
 
-char *ft_before(char *str)
+char	*ft_before(char *str)
 {
-	int index;
-	char *ptr;
+	int		index;
+	char	*ptr;
 
 	index = 0;
 	if (!str)
@@ -39,16 +39,17 @@ char *ft_before(char *str)
 		ptr[index++] = '\n';
 	return (ptr);
 }
-char *ft_after(char *str)
+
+char	*ft_after(char *str)
 {
-	int i;
-	int j;
-	char *ptr;
+	int		i;
+	int		j;
+	char	*ptr;
 
 	j = 0;
-	i = ft_strlen(str);
 	if (!str)
 		return (NULL);
+	i = ft_strlen(str);
 	while (str[j] != '\n' && str[j])
 		j++;
 	if (str[j] == '\0')
@@ -67,7 +68,7 @@ char *ft_after(char *str)
 	return (ptr);
 }
 
-int ft_newline(char *str)
+int	ft_newline(char *str)
 {
 	if (!str)
 		return (0);
@@ -80,9 +81,9 @@ int ft_newline(char *str)
 	return (0);
 }
 
-char *ft_read(int fd, char *buf, char *tmp, char *str)
+char	*ft_read(int fd, char *buf, char *tmp, char *str)
 {
-	int nb_bytes;
+	int	nb_bytes;
 
 	nb_bytes = 1;
 	while (nb_bytes != 0)
@@ -100,18 +101,18 @@ char *ft_read(int fd, char *buf, char *tmp, char *str)
 		str = ft_strjoin(tmp, buf);
 		free(tmp);
 		if (ft_newline(str) == 1)
-			break;
+			break ;
 	}
 	free(buf);
 	return (str);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *str;
-	char *buf;
-	char *line;
-	char *tmp;
+	static char	*str;
+	char		*buf;
+	char		*line;
+	char		*tmp;
 
 	tmp = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
