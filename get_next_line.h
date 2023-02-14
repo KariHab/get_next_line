@@ -21,13 +21,13 @@
 #  define BUFFER_SIZE 100
 # endif
 
+char	*ft_get_the_line(char *str);
+char	*ft_get_the_next(char *str);
+int		ft_newline(char *str);
+char	*ft_read(int fd, char *buf, char *tmp, char *str);
 char	*get_next_line(int fd);
 size_t	ft_strlen(char *str);
 char	*ft_strjoin(char *s1, char *s2);
-char	*ft_before(char *str);
-char	*ft_after(char *str);
-int		ft_newline(char *str);
-char	*ft_read(int fd, char *buf, char *tmp, char *str);
 void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
 
