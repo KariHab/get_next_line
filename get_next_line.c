@@ -12,10 +12,10 @@
 
 #include "get_next_line.h"
 
-char *ft_get_the_line(char *str)
+char	*ft_get_the_line(char *str)
 {
-	int index;
-	char *line;
+	int		index;
+	char	*line;
 
 	index = 0;
 	while (str[index] != '\n' && str[index])
@@ -39,11 +39,11 @@ char *ft_get_the_line(char *str)
 	return (line);
 }
 
-char *ft_get_the_next(char *str)
+char	*ft_get_the_next(char *str)
 {
-	int index;
-	int index_2;
-	char *next;
+	int		index;
+	int		index_2;
+	char	*next;
 
 	index = 0;
 	while (str[index] != '\n' && str[index])
@@ -67,7 +67,7 @@ char *ft_get_the_next(char *str)
 	return (next);
 }
 
-int ft_newline(char *str)
+int	ft_newline(char *str)
 {
 	if (!str)
 		return (0);
@@ -80,16 +80,16 @@ int ft_newline(char *str)
 	return (0);
 }
 
-char *ft_read(int fd, char *buf, char *tmp, char *str)
+char	*ft_read(int fd, char *buf, char *tmp, char *str)
 {
-	int nb_bytes;
+	int	nb_bytes;
 
 	nb_bytes = 1;
 	while (nb_bytes != 0)
 	{
 		nb_bytes = read(fd, buf, BUFFER_SIZE);
 		if (nb_bytes == 0)
-			break;
+			break ;
 		if (nb_bytes == -1)
 		{
 			free(buf);
@@ -103,18 +103,18 @@ char *ft_read(int fd, char *buf, char *tmp, char *str)
 		str = ft_strjoin(tmp, buf);
 		free(tmp);
 		if (ft_newline(str) == 1)
-			break;
+			break ;
 	}
 	free(buf);
 	return (str);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *str;
-	char *buf;
-	char *line;
-	char *tmp;
+	static char	*str;
+	char		*buf;
+	char		*line;
+	char		*tmp;
 
 	tmp = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
